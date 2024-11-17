@@ -1,10 +1,18 @@
 package com.t2f2.t2f2webproject.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "behavior_settings")
 public class BehaviorSettingsEntity {
