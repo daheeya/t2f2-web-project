@@ -1,0 +1,18 @@
+spring :
+  application:
+    name : T2F2 Web Project
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/t2f2?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: qwer1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # 개발 중엔 update, 운영 환경에선 none 권장
+    show-sql: true # 실행되는 SQL을 콘솔에 출력
+    properties:
+      hibernate:
+        format_sql: true # SQL을 보기 좋게 정렬
+        use_sql_comments: true # SQL에 주석 추가 (엔티티나 연관 관계 설명)
+        dialect: org.hibernate.dialect.MySQLDialect # Hibernate MySQL Dialect
+port : 8080
