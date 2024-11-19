@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 활동 조회</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #F9F9F9;
+            border-bottom: 1px solid #DDD;
+            font-size: 20px;
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-right: 40px;
+        }
+        .navbar {
+            display: flex;
+            gap: 30px;
+            font-size: 18px;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .main-title {
+            margin: 25px 40px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .search-bar, .filter-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 40px 15px;
+            gap: 15px;
+        }
+        .search-bar select, .search-bar input, .filter-bar input[type="date"], .sort-bar select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+        }
+        .filter-bar {
+            justify-content: space-between;
+            gap: 25px;
+            padding: 15px 40px;
+        }
+        .filter-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 40px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #DDD;
+            text-align: center;
+        }
+        th {
+            background-color: #F2F2F2;
+            color: #333;
+        }
+        .highlight {
+            font-weight: bold; /* 강조는 굵기만 */
+            color: #333; /* 검은색으로 설정 */
+        }
+        .narrow-column {
+            width: 120px; /* 좁은 칸 (사원명, 이동 시간, 의심 행동 요약) */
+        }
+        .wide-column {
+            width: 300px; /* 넓은 칸 (이동 전, 이동 후 파일 위치) */
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .pagination button {
+            padding: 10px 15px;
+            border: 1px solid #DDD;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .pagination button:disabled {
+            background-color: #CCC;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">T2F2</div>
+    <div class="navbar">
+        <a href="#">조회</a>
+        <a href="#">관리</a>
+        <a href="#">설정</a>
+    </div>
+</div>
+
+<div class="main-title">전체 활동 조회</div>
+
+<!-- 검색 기능 -->
+<div class="search-bar">
+    <select id="searchOption">
+        <option value="employeeName">사원명</option>
+        <option value="fileName">파일명</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
+    <button onclick="search()">검색</button>
+</div>
+
+<!-- 필터 및 정렬 기능 -->
+<div class="filter-bar">
+    <!-- 날짜 선택 -->
+    <div class="filter-item">
+        <label>시작 날짜:</label>
+        <input type="date" id="startDate">
+        <label>종료 날짜:</label>
+        <input type="date" id="endDate">
+    </div>
+
+    <!-- 의심 유형 선택 -->
+    <div class="filter-item">
+        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
+    </div>
+
+    <!-- 정렬 옵션 -->
+    <div class="sort-bar">
+        <select id="sortOption">
+            <option value="recent">최근순</option>
+            <option value="oldest">오래된순</option>
+        </select>
+    </div>
+</div>
+
+<!-- 활동 목록 -->
+<table>
+    <thead>
+    <tr>
+        <th class="narrow-column highlight">사원명</th>
+        <th class="narrow-column highlight">이동 시간</th>
+        <th class="wide-column">이동 전 파일 위치</th>
+        <th class="wide-column">이동 후 파일 위치</th>
+        <th class="narrow-column">의심 행동 요약</th>
+    </tr>
+    </thead>
+    <tbody id="activityTable">
+    </tbody>
+</table>
+
+<!-- 페이지네이션 -->
+<div class="pagination">
+    <button id="prevPage" onclick="changePage(-1)" disabled>&lt; 이전</button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextPage" onclick="changePage(1)">&gt; 다음</button>
+</div>
+
+<script>
+    // 예시 데이터
+    const activities = [
+        { name: "김사원1", time: "2024-11-10 09:30", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
+        { name: "이사원2", time: "2024-11-10 09:32", source: "C:/Old/Doc2", destination: "D:/New/Doc2", summary: "대량 파일 이동" },
+        { name: "박사원3", time: "2024-11-10 09:35", source: "C:/Old/Doc3", destination: "D:/New/Doc3", summary: "빈번한 파일 이동" },
+        // 추가 데이터
+    ];
+    const rowsPerPage = 10;
+    let currentPage = 1;
+
+    function displayActivities() {
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const tableBody = document.getElementById('activityTable');
+        tableBody.innerHTML = '';
+
+        activities.slice(startIndex, endIndex).forEach(activity => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="narrow-column highlight">${activity.name}</td>
+                <td class="narrow-column highlight">${activity.time}</td>
+                <td class="wide-column">${activity.source}</td>
+                <td class="wide-column">${activity.destination}</td>
+                <td class="narrow-column">${activity.summary}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${Math.ceil(activities.length / rowsPerPage)}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === Math.ceil(activities.length / rowsPerPage);
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        displayActivities();
+    }
+
+    displayActivities();
+</script>
+
+</body>
+</html>
