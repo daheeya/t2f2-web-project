@@ -7,6 +7,7 @@
     <style>
         /* 기본 스타일 */
         body {
+            position: relative;
             font-family: 'Arial', sans-serif;
             background-color: #FFFFFF;
             color: #333;
@@ -14,32 +15,33 @@
             padding: 0;
         }
 
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #007BFF;
+            padding: 20px 20px;
+        }
+
         /* 네비게이션 바 스타일 */
         .navbar {
             display: flex;
-            justify-content: flex-start; /* 메뉴 항목을 왼쪽으로 정렬 */
             align-items: center;
-            background-color: #F9F9F9; /* 배경 색상 변경 */
-            color: #007BFF; /* 글씨 색상 변경 */
-            padding: 10px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /*padding: 20px 40px;*/
+            margin: 0; /* 외부 여백 제거 */
+            padding: 0; /* 내부 여백 제거 */
+            background-color: #F9F9F9;
+            border-bottom: 1px solid #DDD;
+            font-size: 20px;
         }
 
-        .site-name {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-right: 50px; /* 메뉴와 제목 사이 간격 추가 */
+        .navbar ul:hover {
+            background-color: #E2E6EA; /* 호버시 배경 색상 변경 */
         }
 
         .navbar ul {
             display: flex;
             list-style: none;
-            padding: 0;
+            padding: 20px 20px;
             margin: 0;
         }
 
@@ -50,7 +52,7 @@
 
         .navbar a {
             text-decoration: none;
-            color: #007BFF; /* 글씨 색상 변경 */
+            color: #007BFF;
             font-size: 1em;
             padding: 8px 12px;
             border-radius: 5px;
@@ -58,7 +60,7 @@
         }
 
         .navbar a:hover {
-            background-color: #E2E6EA; /* 호버시 배경 색상 변경 */
+            color: #000000; /* 호버 시 글씨 색상을 더 진하게 변경 */
         }
 
         /* 드롭다운 메뉴 스타일 */
@@ -69,13 +71,12 @@
             left: 0;
             background-color: #F9F9F9; /* 배경 색상 변경 */
             min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             z-index: 5;
         }
 
         .dropdown-content a {
-            color: #007BFF; /* 글씨 색상 변경 */
+            color: #007BFF;
             text-decoration: none;
             padding: 10px;
             display: block;
@@ -124,7 +125,7 @@
         }
 
         table {
-            width: 100%;
+            width: 95%;
             border-collapse: collapse;
             margin: 20px 40px;
             font-size: 16px;
@@ -181,7 +182,7 @@
 
 <!-- 네비게이션 바 -->
 <div class="navbar">
-    <div class="site-name">T2F2</div>
+    <div class="logo">T2F2</div>
     <ul>
         <li>
             <a href="#">조회</a>
@@ -283,32 +284,46 @@
        });
 
        // 두 가지 이상 선택된 경우에만 조회하도록 설정
-       if (selectedBehaviors.length >= 2) {
-           // 선택된 이상행동을 기반으로 필터링 및 테이블 업데이트
-           console.log("선택된 이상행동: " + selectedBehaviors.join(", "));
-           // 결과 테이블에 필터링된 데이터 채우기 (이 부분은 서버로부터 데이터를 받아오거나 로컬에서 처리)
-           // 예시 데이터 추가
-           const tableBody = document.querySelector('.result-table tbody');
-           tableBody.innerHTML = ''; // 기존 데이터 지우기
-           const data = [
-               { name: "홍길동", fileName: "파일1.txt", startDate: "2024-11-01", endDate: "2024-11-02", behavior: "근무 외 시간, 외부 장치" },
-               { name: "김철수", fileName: "파일2.doc", startDate: "2024-11-03", endDate: "2024-11-04", behavior: "대량 파일 이동, 빈번한 파일 이동" }
-           ];
+        if (selectedBehaviors.length >= 2) {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
 
-           // 예시 데이터로 테이블 채우기
-           data.forEach(item => {
-               const row = document.createElement('tr');
-               row.innerHTML = `
-                   <td>${item.name} & ${item.fileName}</td>
-                   <td>${item.startDate}</td>
-                   <td>${item.endDate}</td>
-                   <td>${item.behavior}</td>
-               `;
-               tableBody.appendChild(row);
-           });
-       } else {
-           alert("두 가지 이상의 이상행동을 선택해주세요.");
-       }
+            // 선택된 이상행동을 기반으로 필터링하여 서버로 요청
+            const searchRequest = {
+                behaviorTypes: selectedBehaviors,
+                startDate: startDate ? startDate : null,
+                endDate: endDate ? endDate : null
+            };
+
+            fetch('/api/abnormal-behaviors/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchRequest)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('.result-table tbody');
+                tableBody.innerHTML = ''; // 기존 데이터 지우기
+
+                // 서버에서 받아온 데이터를 테이블에 채우기
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.employeeName} & ${item.fileName}</td>
+                        <td>${item.startDate}</td>
+                        <td>${item.endDate}</td>
+                        <td>${item.behaviorType}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+
+        } else {
+            alert("두 가지 이상의 이상행동을 선택해주세요.");
+        }
    }
 
 </script>
