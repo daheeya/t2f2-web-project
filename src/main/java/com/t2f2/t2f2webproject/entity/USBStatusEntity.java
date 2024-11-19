@@ -18,15 +18,14 @@ import java.time.LocalDateTime;
 public class USBStatusEntity {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JoinColumn(name = "usb_idx", nullable = false)
-    private USBDevicesEntity usbDevicesEntity;
+    private Integer idx;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private USBStatusType status;
 
-    @Id
     @Column(name = "status_time", nullable = false)
     private LocalDateTime statusTime;
 }
