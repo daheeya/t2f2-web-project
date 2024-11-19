@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T2F2 - 이상행동 조회</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 네비게이션 바 스타일 */
+        .navbar {
+            display: flex;
+            justify-content: flex-start; /* 메뉴 항목을 왼쪽으로 정렬 */
+            align-items: center;
+            background-color: #F9F9F9; /* 배경 색상 변경 */
+            color: #007BFF; /* 글씨 색상 변경 */
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-right: 50px; /* 메뉴와 제목 사이 간격 추가 */
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar li {
+            margin: 0 15px;
+            position: relative;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #007BFF; /* 글씨 색상 변경 */
+            font-size: 1em;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #E2E6EA; /* 호버시 배경 색상 변경 */
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #F9F9F9; /* 배경 색상 변경 */
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 5;
+        }
+
+        .dropdown-content a {
+            color: #007BFF; /* 글씨 색상 변경 */
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #E2E6EA; /* 호버시 배경 색상 변경 */
+        }
+
+        .navbar li:hover .dropdown-content {
+            display: block;
+        }
+
+        /* 기본 페이지 스타일 */
+        .main-title {
+            margin: 120px 40px 25px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar, .filter-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 40px 15px;
+            gap: 15px;
+        }
+
+        .search-bar select, .search-bar input, .filter-bar input[type="date"], .sort-bar select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+        }
+
+        .filter-bar {
+            justify-content: space-between;
+            gap: 25px;
+            padding: 15px 40px;
+        }
+
+        .filter-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 40px;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #DDD;
+            text-align: center;
+        }
+
+        th {
+            background-color: #F2F2F2;
+            color: #333;
+        }
+
+        .highlight {
+            font-weight: bold; /* 강조는 굵기만 */
+            color: #333; /* 검은색으로 설정 */
+        }
+
+        .narrow-column {
+            width: 120px; /* 좁은 칸 (사원명, 이동 시간, 의심 행동 요약) */
+        }
+
+        .wide-column {
+            width: 300px; /* 넓은 칸 (이동 전, 이동 후 파일 위치) */
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: 1px solid #DDD;
+            border-radius: 5px;
+            background-color: #007BFF; /* 버튼 색상 변경 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            background-color: #CCC;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<div class="navbar">
+    <div class="site-name">T2F2</div>
+    <ul>
+        <li>
+            <a href="#">조회</a>
+            <div class="dropdown-content">
+                <a href="activity_view.html">전체 활동 조회</a>
+                <a href="abnormal_behavior_view.html">이상 행동 조회</a>
+            </div>
+        </li>
+        <li>
+            <a href="#">관리</a>
+            <div class="dropdown-content">
+                <a href="usb_management.html">USB 관리</a>
+                <a href="employee_management.html">사원 관리</a>
+            </div>
+        </li>
+        <li>
+            <a href="#">설정</a>
+            <div class="dropdown-content">
+                <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!-- 페이지 컨텐츠 -->
+<div class="main-title">이상 행동 조회</div>
+
+<!-- 검색 기능 -->
+<div class="search-bar">
+    <select id="searchOption">
+        <option value="employeeName">사원명</option>
+        <option value="fileName">파일명</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
+    <button onclick="search()">검색</button>
+</div>
+
+<!-- 필터 및 정렬 기능 -->
+<div class="filter-bar">
+    <!-- 날짜 선택 -->
+    <div class="filter-item">
+        <label>시작 날짜:</label>
+        <input type="date" id="startDate">
+        <label>종료 날짜:</label>
+        <input type="date" id="endDate">
+    </div>
+
+    <!-- 의심 유형 선택 -->
+    <div class="filter-item">
+        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
+    </div>
+
+    <!-- 정렬 옵션 -->
+    <div class="sort-bar">
+        <select id="sortOption">
+            <option value="recent">최근순</option>
+            <option value="oldest">오래된순</option>
+        </select>
+    </div>
+</div>
+
+<!-- 결과 표시 테이블 -->
+<table class="result-table">
+    <thead>
+    <tr>
+        <th>사원 이름 & 파일명</th>
+        <th>시작 날짜</th>
+        <th>종료 날짜</th>
+        <th>의심 행동 유형</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 동적으로 결과를 채워넣을 부분 -->
+    </tbody>
+</table>
+
+<!-- 페이지네이션 -->
+<div class="pagination">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+</div>
+
+<script>
+    // 검색 처리 함수
+   function handleSearch(event) {
+       event.preventDefault(); // 기본 제출 동작 방지
+
+       // 선택된 체크박스들 확인
+       const selectedBehaviors = [];
+       const checkboxes = document.querySelectorAll('.behavior-checkboxes input[type="checkbox"]');
+
+       checkboxes.forEach(checkbox => {
+           if (checkbox.checked) {
+               selectedBehaviors.push(checkbox.value);
+           }
+       });
+
+       // 두 가지 이상 선택된 경우에만 조회하도록 설정
+       if (selectedBehaviors.length >= 2) {
+           // 선택된 이상행동을 기반으로 필터링 및 테이블 업데이트
+           console.log("선택된 이상행동: " + selectedBehaviors.join(", "));
+           // 결과 테이블에 필터링된 데이터 채우기 (이 부분은 서버로부터 데이터를 받아오거나 로컬에서 처리)
+           // 예시 데이터 추가
+           const tableBody = document.querySelector('.result-table tbody');
+           tableBody.innerHTML = ''; // 기존 데이터 지우기
+           const data = [
+               { name: "홍길동", fileName: "파일1.txt", startDate: "2024-11-01", endDate: "2024-11-02", behavior: "근무 외 시간, 외부 장치" },
+               { name: "김철수", fileName: "파일2.doc", startDate: "2024-11-03", endDate: "2024-11-04", behavior: "대량 파일 이동, 빈번한 파일 이동" }
+           ];
+
+           // 예시 데이터로 테이블 채우기
+           data.forEach(item => {
+               const row = document.createElement('tr');
+               row.innerHTML = `
+                   <td>${item.name} & ${item.fileName}</td>
+                   <td>${item.startDate}</td>
+                   <td>${item.endDate}</td>
+                   <td>${item.behavior}</td>
+               `;
+               tableBody.appendChild(row);
+           });
+       } else {
+           alert("두 가지 이상의 이상행동을 선택해주세요.");
+       }
+   }
+
+</script>
+
+</body>
+</html>
