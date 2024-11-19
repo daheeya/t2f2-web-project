@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - T2F2</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5; /* 배경 색상 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007BFF; /* 로고 색상 변경 */
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 0px; /* 왼쪽과 오른쪽 여백을 동일하게 설정 */
+            margin: 10px 0;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .input-field:focus {
+            border-color: #007BFF; /* 포커스 시 색상 변경 */
+            outline: none;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF; /* 버튼 색상 변경 */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3; /* 버튼 호버 시 색상 변화 */
+        }
+    </style>
+</head>
+<body>
+
+<!-- 로그인 폼 -->
+<div class="login-container">
+    <div class="login-logo">
+        T2F2
+    </div>
+    <form action="/login" method="post">
+        <input type="text" class="input-field" id="username" name="username" placeholder="아이디" required>
+        <input type="password" class="input-field" id="password" name="password" placeholder="비밀번호" required>
+        <button type="submit" class="login-button">로그인</button>
+    </form>
+</div>
+
+</body>
+</html>
