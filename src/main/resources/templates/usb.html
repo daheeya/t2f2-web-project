@@ -177,6 +177,24 @@
         .delete-button:hover {
             background-color: #0062CC; /* 호버 시 버튼 배경색 */
         }
+
+        /* 로그아웃 버튼 스타일 */
+        .logout-btn {
+            margin-left: 650px; /* 오른쪽 정렬 */
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+        }
+
+        .logout-btn:hover {
+            background-color: #e04343;
+        }
     </style>
 </head>
 <body>
@@ -205,6 +223,7 @@
                 </div>
             </li>
         </ul>
+            <button class="logout-btn" onclick="logout()">로그아웃</button>
     </div>
 
         <div class="main">
@@ -300,30 +319,39 @@
     </div>
 
     <script>
-        function showTab(tabId) {
-            document.querySelectorAll('.table-container').forEach(container => container.classList.remove('active'));
-            document.querySelector(`#${tabId}`).classList.add('active');
-            document.querySelectorAll('.sub-nav button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`#${tabId}Tab`).classList.add('active');
-        }
-
-        function approveUSB(usbId) {
-            alert(`${usbId}이(가) 등록되었습니다.`);
-            // 등록 처리 로직 추가
-        }
-
-        function rejectUSB(usbId) {
-            alert(`${usbId}이(가) 거절되었습니다.`);
-            // 거절 처리 로직 추가
-        }
-
-        function confirmDelete(usbId) {
-            if (confirm(`${usbId}을(를) 정말로 제거하시겠습니까?`)) {
-                alert(`${usbId}이(가) 제거되었습니다.`);
-                // 제거 처리 로직 추가
+        function logout() {
+                // 로그아웃 시 로그인 페이지로 이동
+                window.location.href = 'login.html';
             }
-        }
+                function showTab(tabId) {
+                    document.querySelectorAll('.table-container').forEach(container => container.classList.remove('active'));
+                    document.querySelector(`#${tabId}`).classList.add('active');
+                    document.querySelectorAll('.sub-nav button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`#${tabId}Tab`).classList.add('active');
+                }
+
+                function approveUSB(usbId) {
+                    alert(`${usbId}이(가) 등록되었습니다.`);
+                    // 등록 처리 로직 추가
+                }
+
+                function rejectUSB(usbId) {
+                    alert(`${usbId}이(가) 거절되었습니다.`);
+                    // 거절 처리 로직 추가
+                }
+
+                function confirmDelete(usbId) {
+                    if (confirm(`${usbId}을(를) 정말로 제거하시겠습니까?`)) {
+                        alert(`${usbId}이(가) 제거되었습니다.`);
+                        // 제거 처리 로직 추가
+                    }
+                }
     </script>
 </body>
-
+<script>
+    function logout() {
+        // 로그아웃 시 로그인 페이지로 이동
+        window.location.href = 'login.html';
+    }
+</script>
 </html>

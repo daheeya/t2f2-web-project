@@ -168,6 +168,24 @@
         .pagination span{
             padding: 5px 0px;
         }
+
+        /* 로그아웃 버튼 스타일 */
+        .logout-btn {
+            margin-left: 650px; /* 오른쪽 정렬 */
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+        }
+
+        .logout-btn:hover {
+            background-color: #e04343;
+        }
     </style>
 </head>
 <body>
@@ -195,6 +213,7 @@
                 </div>
             </li>
         </ul>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
     </div>
 
         <div class="main">
@@ -230,6 +249,11 @@
         <span id="pageInfo">1 / 1</span>
         <button id="nextPage" onclick="changePage(1)">&gt;</button>
     </div>
-
+    <script>
+        function logout() {
+            // 로그아웃 시 로그인 페이지로 이동
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>

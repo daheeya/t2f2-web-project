@@ -201,6 +201,24 @@
         padding: 5px 0px;
         }
 
+        /* 로그아웃 버튼 스타일 */
+        .logout-btn {
+            margin-left: 650px; /* 오른쪽 정렬 */
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+        }
+
+        .logout-btn:hover {
+            background-color: #e04343;
+        }
+
     </style>
 </head>
 <body>
@@ -230,6 +248,7 @@
             </div>
         </li>
     </ul>
+    <button class="logout-btn" onclick="logout()">로그아웃</button>
 </div>
 
 <div class="main-title">전체 활동 조회</div>
@@ -293,6 +312,11 @@
 </div>
 
 <script>
+    function logout() {
+        // 로그아웃 시 로그인 페이지로 이동
+        window.location.href = 'login.html';
+    }
+
     // 예시 데이터
     const activities = [
         { name: "김사원1", time: "2024-11-10 09:30", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
