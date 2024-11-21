@@ -87,7 +87,7 @@
 
         /* 기본 페이지 스타일 */
         .main-title {
-            margin: 120px 150px 25px;
+            margin: 50px 150px 25px;
             font-size: 24px;
             font-weight: bold;
             color: #007bff
@@ -194,106 +194,107 @@
             cursor: pointer;
         }
 
+        .pagination button:hover {
+            background-color: #0062CC; /* 호버 시 버튼 배경색 */
+        }
+
         .pagination button:disabled {
             background-color: #007BFF;
             cursor: default;
         }
 
         .pagination span{
-        padding: 5px 0px;
+            padding: 5px 0px;
         }
     </style>
 </head>
 <body>
-
 <!-- 네비게이션 바 -->
-<div class="navbar">
-    <div class="logo">T2F2</div>
-    <ul>
-        <li>
-            <a href="#">조회</a>
-            <div class="dropdown-content">
-                <a href="activity_view.html">전체 활동 조회</a>
-                <a href="abnormal_behavior_view.html">이상 행동 조회</a>
-            </div>
-        </li>
-        <li>
-            <a href="#">관리</a>
-            <div class="dropdown-content">
-                <a href="usb_management.html">USB 관리</a>
-                <a href="employee_management.html">사원 관리</a>
-            </div>
-        </li>
-        <li>
-            <a href="#">설정</a>
-            <div class="dropdown-content">
-                <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<!-- 페이지 컨텐츠 -->
-<div class="main-title">이상 행동 조회</div>
-
-<!-- 검색 기능 -->
-<div class="search-bar">
-    <select id="searchOption">
-        <option value="employeeName">사원명</option>
-        <option value="fileName">파일명</option>
-    </select>
-    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
-    <button onclick="search()">검색</button>
-</div>
-
-<!-- 필터 및 정렬 기능 -->
-<div class="filter-bar">
-    <!-- 날짜 선택 -->
-    <div class="filter-item">
-        <label>시작 날짜:</label>
-        <input type="date" id="startDate">
-        <label>종료 날짜:</label>
-        <input type="date" id="endDate">
+    <div class="navbar">
+        <div class="logo">T2F2</div>
+        <ul>
+            <li>
+                <a href="#">조회</a>
+                <div class="dropdown-content">
+                    <a href="filemovement_view.html">전체 활동 조회</a>
+                    <a href="abnormal_behavior_view.html">이상 행동 조회</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">관리</a>
+                <div class="dropdown-content">
+                    <a href="usb.html">USB 관리</a>
+                    <a href="employee.html">사원 관리</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">설정</a>
+                <div class="dropdown-content">
+                    <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
+                </div>
+            </li>
+        </ul>
     </div>
 
-    <!-- 의심 유형 선택 -->
-    <div class="filter-item">
-        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
-        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
-        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
+    <div class="main">
+        <div class="main-title">이상 행동 조회</div>
+        <!-- 검색 기능 -->
+        <div class="search-bar">
+            <select id="searchOption">
+                <option value="employeeName">사원명</option>
+                <option value="fileName">파일명</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
+            <button onclick="search()">검색</button>
+        </div>
+        <!-- 필터 및 정렬 기능 -->
+        <div class="filter-bar">
+            <!-- 날짜 선택 -->
+            <div class="filter-item">
+                <label>시작 날짜:</label>
+                <input type="date" id="startDate">
+                <label>종료 날짜:</label>
+                <input type="date" id="endDate">
+            </div>
+            <!-- 의심 유형 선택 -->
+            <div class="filter-item">
+                <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
+                <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
+                <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
+            </div>
+            <!-- 정렬 옵션 -->
+            <div class="sort-bar">
+                <select id="sortOption">
+                    <option value="recent">최근순</option>
+                    <option value="oldest">오래된순</option>
+                </select>
+            </div>
+        </div>
+        <!-- 결과 표시 테이블 -->
+        <div id="view">
+            <div id="pending" class="table-container active">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>사원 이름 & 파일명</th>
+                        <th>시작 날짜</th>
+                        <th>종료 날짜</th>
+                        <th>의심 행동 유형</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 동적으로 결과를 채워넣을 부분 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <!-- 정렬 옵션 -->
-    <div class="sort-bar">
-        <select id="sortOption">
-            <option value="recent">최근순</option>
-            <option value="oldest">오래된순</option>
-        </select>
+        <!-- 페이지네이션 -->
+    <div class="pagination">
+        <button id="prevPage" onclick="changePage(-1)" disabled>&lt;</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" onclick="changePage(1)">&gt;</button>
     </div>
-</div>
-
-<!-- 결과 표시 테이블 -->
-<table class="result-table">
-    <thead>
-    <tr>
-        <th>사원 이름 & 파일명</th>
-        <th>시작 날짜</th>
-        <th>종료 날짜</th>
-        <th>의심 행동 유형</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- 동적으로 결과를 채워넣을 부분 -->
-    </tbody>
-</table>
-
-<!-- 페이지네이션 -->
-<div class="pagination">
-    <button id="prevPage" onclick="changePage(-1)" disabled>&lt;</button>
-    <span id="pageInfo">1 / 1</span>
-    <button id="nextPage" onclick="changePage(1)">&gt;</button>
-</div>
-
 <script>
     // 검색 처리 함수
    function handleSearch(event) {

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USB 요청 관리</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #007BFF;
+            padding: 20px 50px 20px 150px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            margin: 0; /* 외부 여백 제거 */
+            padding: 0; /* 내부 여백 제거 */
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #DDD;
+            font-size: 20px;
+        }
+
+        .navbar ul {
+            align-items: center;
+            display: flex;
+            list-style: none;
+            margin: 0;
+        }
+
+        .navbar li {
+            position: relative;
+            padding: 20px 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1em;
+            padding: 8px 12px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #000000; /* 호버 시 글씨 색상을 더 진하게 변경 */
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0%;
+            background-color: #ffffff; /* 배경 색상 변경 */
+            min-width: 160px;
+            z-index: 5;
+        }
+
+        .dropdown-content a {
+            color: #007BFF;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #666666; /* 호버시 배경 색상 변경 */
+            color: #FFFFFF;
+        }
+
+        .navbar li:hover .dropdown-content {
+            display: block;
+        }
+
+        .main-title {
+            margin: 50px 150px 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff
+        }
+        .sub-nav {
+            display: flex;
+            justify-content: flex-first; /* 버튼을 오른쪽 정렬 */
+            align-items: center;
+            padding: 0;
+            margin: 50px 0px 0px 150px;
+        }
+
+        #sub-gnb .sub-nav button{
+            width: auto;
+            cursor: pointer;
+            margin: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+
+        }
+        #sub-gnb .sub-nav button.active{
+            background-color: #003D80;
+            color: white;
+            margin: 5px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 0px 150px;
+            font-size: 16px;
+            border-top: 2px solid  #007BFF;
+            border-bottom: 2px solid  #007BFF;
+        }
+
+        th {
+            background-color: #ffffff;
+            color: #007BFF;
+        }
+        
+        thead {
+        font-weight: bold;
+        }
+        
+        td, th {
+            padding: 12px;
+            border-bottom: 1px solid  #007BFF;
+            text-align: center;
+        }
+        
+        td {
+        border-bottom: 1px solid rgba(0,0,0,.1);
+        background: #fff;
+
+        }
+    
+        #title a{
+            color:#555;
+            text-decoration-line: none;
+        }
+
+        .table-container { display: none; }
+        .table-container.active { display: block;}
+
+        /* 등록 버튼 스타일 */
+        .action-button {
+            background-color: #007BFF; /* 녹색 */
+            color: white;
+            border: 1px solid #ffffff;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .action-button:hover {
+            background-color: #0062CC; /* 호버 시 버튼 배경색 */
+        }
+
+        /* 거절 버튼 스타일 */
+        .delete-button {
+            background-color: #007BFF; /* 빨간색 */
+            color: white;
+            border: 1px solid #ffffff;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .delete-button:hover {
+            background-color: #0062CC; /* 호버 시 버튼 배경색 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+        <div class="logo">T2F2</div>
+        <ul>
+            <li>
+                <a href="#">조회</a>
+                <div class="dropdown-content">
+                    <a href="filemovement_view.html">전체 활동 조회</a>
+                    <a href="abnormal_behavior_view.html">이상 행동 조회</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">관리</a>
+                <div class="dropdown-content">
+                    <a href="usb.html">USB 관리</a>
+                    <a href="employee.html">사원 관리</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">설정</a>
+                <div class="dropdown-content">
+                    <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+        <div class="main">
+            <div id="sub-gnb">
+                <div class="main-title">USB 관리</div>
+                <div class="sub-nav">
+                    <button id="pendingTab" class="active" onclick="showTab('pending')">대기중인 USB</button>
+                    <button id="rejectedTab" onclick="showTab('rejected')">거절된 USB</button>
+                    <button id="registeredTab" onclick="showTab('registered')">등록된 USB</button>
+                </div>
+            </div>
+            
+            <div id="view">
+                <div id="pending" class="table-container active">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>사원명</th>
+                                <th>USB ID</th>
+                                <th>USB Serial</th>
+                                <th>Serial Number</th>
+                                <th>요청 시간</th>
+                                <th>처리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tooltip">홍길동<span class="tooltip-text">부서명: IT부서</span></td>
+                                <td>USB001</td>
+                                <td>123456</td>
+                                <td>SN123456</td>
+                                <td>2024-11-11 10:30</td>
+                                <td>
+                                    <button class="action-button" onclick="approveUSB('USB001')">등록</button>
+                                    <button class="action-button delete-button" onclick="rejectUSB('USB001')">거절</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="rejected" class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>사원명</th>
+                                <th>USB ID</th>
+                                <th>USB Serial</th>
+                                <th>Serial Number</th>
+                                <th>거절된 시간</th>
+                                <th>제거</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tooltip">이몽룡<span class="tooltip-text">부서명: 인사부</span></td>
+                                <td>USB002</td>
+                                <td>654321</td>
+                                <td>SN654321</td>
+                                <td>2024-11-10 15:20</td>
+                                <td><button class="action-button delete-button" onclick="confirmDelete('USB002')">제거</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="registered" class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>사원명</th>
+                                <th>USB ID</th>
+                                <th>USB Serial</th>
+                                <th>Serial Number</th>
+                                <th>등록된 시간</th>
+                                <th>제거</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tooltip">성춘향<span class="tooltip-text">부서명: 영업부</span></td>
+                                <td>USB003</td>
+                                <td>987654</td>
+                                <td>SN987654</td>
+                                <td>2024-11-09 12:10</td>
+                                <td><button class="action-button delete-button" onclick="confirmDelete('USB003')">제거</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.table-container').forEach(container => container.classList.remove('active'));
+            document.querySelector(`#${tabId}`).classList.add('active');
+            document.querySelectorAll('.sub-nav button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`#${tabId}Tab`).classList.add('active');
+        }
+
+        function approveUSB(usbId) {
+            alert(`${usbId}이(가) 등록되었습니다.`);
+            // 등록 처리 로직 추가
+        }
+
+        function rejectUSB(usbId) {
+            alert(`${usbId}이(가) 거절되었습니다.`);
+            // 거절 처리 로직 추가
+        }
+
+        function confirmDelete(usbId) {
+            if (confirm(`${usbId}을(를) 정말로 제거하시겠습니까?`)) {
+                alert(`${usbId}이(가) 제거되었습니다.`);
+                // 제거 처리 로직 추가
+            }
+        }
+    </script>
+</body>
+
+</html>

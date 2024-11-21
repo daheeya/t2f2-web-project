@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사원 관리</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #007BFF;
+            padding: 20px 50px 20px 150px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            margin: 0; /* 외부 여백 제거 */
+            padding: 0; /* 내부 여백 제거 */
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #DDD;
+            font-size: 20px;
+        }
+
+        .navbar ul {
+            align-items: center;
+            display: flex;
+            list-style: none;
+            margin: 0;
+        }
+
+        .navbar li {
+            position: relative;
+            padding: 20px 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1em;
+            padding: 8px 12px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #000000; /* 호버 시 글씨 색상을 더 진하게 변경 */
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0%;
+            background-color: #ffffff; /* 배경 색상 변경 */
+            min-width: 160px;
+            z-index: 5;
+        }
+
+        .dropdown-content a {
+            color: #007BFF;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #666666; /* 호버시 배경 색상 변경 */
+            color: #FFFFFF;
+        }
+
+        .navbar li:hover .dropdown-content {
+            display: block;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px 150px;
+            font-size: 16px;
+            border-top: 2px solid  #007BFF;
+            border-bottom: 2px solid  #007BFF;
+        }
+
+        th {
+            background-color: #ffffff;
+            color: #007BFF;
+        }
+
+        .highlight {
+            font-weight: bold; /* 강조는 굵기만 */
+            color: #007BFF; /* 검은색으로 설정 */
+        }
+
+        td, th {
+            padding: 12px;
+            border-bottom: 1px solid  #007BFF;
+            text-align: center;
+        }
+
+        td {
+        border-bottom: 1px solid rgba(0,0,0,.1);
+        background: #fff;
+
+        }
+        .narrow-column {
+            width: 120px; /* 좁은 칸 (사원명, 이동 시간, 의심 행동 요약) */
+        }
+
+        .wide-column {
+            width: 300px; /* 넓은 칸 (이동 전, 이동 후 파일 위치) */
+        }
+        .main-title {
+            margin: 50px 150px 25px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff
+        }
+
+        .action-button {
+            padding: 5px 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #007BFF; /* 버튼 색상 변경 */
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background-color: #0062CC; /* 호버 시 버튼 배경색 */
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .pagination button {
+            padding: 5px 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #007BFF; /* 버튼 색상 변경 */
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #0062CC; /* 호버 시 버튼 배경색 */
+        }
+
+        .pagination button:disabled {
+            background-color: #007BFF;
+            cursor: default;
+        }
+
+        .pagination span{
+            padding: 5px 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">T2F2</div>
+        <ul>
+            <li>
+                <a href="#">조회</a>
+                <div class="dropdown-content">
+                    <a href="filemovement_view.html">전체 활동 조회</a>
+                    <a href="abnormal_behavior_view.html">이상 행동 조회</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">관리</a>
+                <div class="dropdown-content">
+                    <a href="usb.html">USB 관리</a>
+                    <a href="employee.html">사원 관리</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">설정</a>
+                <div class="dropdown-content">
+                    <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+        <div class="main">
+            <div class="main-title">사원 관리</div>
+
+            <div id="view">
+                <div id="pending" class="table-container active">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>사원명</th>
+                                <th>PC name</th>
+                                <th>부서</th>
+                                <th>ID</th>
+                                <th>처리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>홍길동</td>
+                                <td>USB001</td>
+                                <td>IT 부서</td>
+                                <td>SN123456</td>
+                                <td><button class="action-button delete-button" onclick="confirmDelete('USB002')">제거</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <div class="pagination">
+        <button id="prevPage" onclick="changePage(-1)" disabled>&lt;</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" onclick="changePage(1)">&gt;</button>
+    </div>
+
+</body>
+</html>
