@@ -19,7 +19,6 @@ public class USBStatusEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "usb_idx", nullable = false)
     private Integer idx;
 
     @Column(name = "status", nullable = false)
@@ -28,4 +27,8 @@ public class USBStatusEntity {
 
     @Column(name = "status_time", nullable = false)
     private LocalDateTime statusTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usb_idx")
+    private USBDevicesEntity usbDevice;
 }

@@ -22,9 +22,8 @@ public class USBDevicesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_idx")
-    private EmployeesEntity employee;
+    @Column(name = "computer_name", nullable = false)
+    private String computerName;
 
     @Column(name = "device_id", nullable = false, unique = true)
     private String deviceId;
@@ -38,6 +37,9 @@ public class USBDevicesEntity {
     @Column(name = "request_time")
     private LocalDateTime requestTime;
 
-    @OneToMany(mappedBy = "usbDevicesEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usbDevice", fetch = FetchType.LAZY)
     private List<USBStatusEntity> statusEntities;
+
+    @OneToMany(mappedBy = "usbDevice", fetch = FetchType.LAZY)
+    private List<FileMovementsEntity> fileMovementsEntities;
 }
