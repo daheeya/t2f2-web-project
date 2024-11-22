@@ -21,10 +21,6 @@ public class FileMovementsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "computer_idx", nullable = false)
-    private ComputersEntity computersEntity;
-
     @Column(name = "file_name", nullable = false)
     private String fileName;
 
@@ -41,9 +37,9 @@ public class FileMovementsEntity {
     @JoinColumn(name = "usb_idx")
     private USBDevicesEntity usbDevice;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "computer_name", nullable = false)
+    private String computerName;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "file_type", nullable = false)
+    private String fileType;
 }
