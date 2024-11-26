@@ -297,6 +297,7 @@
     <tr>
         <th class="narrow-column highlight">사원명</th>
         <th class="narrow-column highlight">이동 시간</th>
+        <th class="narrow-column highlight">파일 이름</th>
         <th class="wide-column">이동 전 파일 위치</th>
         <th class="wide-column">이동 후 파일 위치</th>
         <th class="narrow-column">의심 행동 요약</th>
@@ -321,11 +322,12 @@
 
     // 예시 데이터
     const activities = [
-        { name: "김사원1", time: "2024-11-10 09:30", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
-        { name: "이사원2", time: "2024-11-10 09:32", source: "C:/Old/Doc2", destination: "D:/New/Doc2", summary: "대량 파일 이동" },
-        { name: "박사원3", time: "2024-11-10 09:35", source: "C:/Old/Doc3", destination: "D:/New/Doc3", summary: "빈번한 파일 이동" },
+        { name: "김사원1", time: "2024-11-10 09:30", fileName: "Doc1", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
+        { name: "이사원2", time: "2024-11-10 09:32", fileName: "Doc2", source: "C:/Old/Doc2", destination: "D:/New/Doc2", summary: "대량 파일 이동" },
+        { name: "박사원3", time: "2024-11-10 09:35", fileName: "Doc3", source: "C:/Old/Doc3", destination: "D:/New/Doc3", summary: "빈번한 파일 이동" },
         // 추가 데이터
     ];
+
     const rowsPerPage = 10;
     let currentPage = 1;
 
@@ -340,6 +342,7 @@
             row.innerHTML = `
                 <td class="narrow-column highlight">${activity.name}</td>
                 <td class="narrow-column highlight">${activity.time}</td>
+                <td class="narrow-column highlight">${activity.fileName}</td>
                 <td class="wide-column">${activity.source}</td>
                 <td class="wide-column">${activity.destination}</td>
                 <td class="narrow-column">${activity.summary}</td>
