@@ -320,7 +320,6 @@
         window.location.href = 'login.html';
     }
 
-    // 예시 데이터
     const activities = [
         { name: "김사원1", time: "2024-11-10 09:30", fileName: "Doc1", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
         { name: "이사원2", time: "2024-11-10 09:32", fileName: "Doc2", source: "C:/Old/Doc2", destination: "D:/New/Doc2", summary: "대량 파일 이동" },
@@ -331,13 +330,44 @@
     const rowsPerPage = 10;
     let currentPage = 1;
 
+    function getCheckedFilters() {
+        const checkboxes = document.querySelectorAll('input[name="suspicionType"]:checked');
+        return Array.from(checkboxes).map(checkbox => checkbox.value);
+    }
+
+    function filterActivities() {
+        const filters = getCheckedFilters();
+
+        if (filters.length === 0) {
+            // 필터가 없으면 모든 데이터를 반환
+            return activities;
+        }
+
+        return activities.filter(activity => {
+            // summary가 필터 중 하나와 일치하면 포함
+            return filters.some(filter => {
+                if (filter === "offWork" && activity.summary.includes("근무 시간 외 이동")) {
+                    return true;
+                }
+                if (filter === "bulk" && activity.summary.includes("대량 파일 이동")) {
+                    return true;
+                }
+                if (filter === "frequent" && activity.summary.includes("빈번한 파일 이동")) {
+                    return true;
+                }
+                return false;
+            });
+        });
+    }
+
     function displayActivities() {
+        const filteredActivities = filterActivities();
         const startIndex = (currentPage - 1) * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         const tableBody = document.getElementById('activityTable');
         tableBody.innerHTML = '';
 
-        activities.slice(startIndex, endIndex).forEach(activity => {
+        filteredActivities.slice(startIndex, endIndex).forEach(activity => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="narrow-column highlight">${activity.name}</td>
@@ -350,15 +380,23 @@
             tableBody.appendChild(row);
         });
 
-        document.getElementById('pageInfo').textContent = `${currentPage} / ${Math.ceil(activities.length / rowsPerPage)}`;
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${Math.ceil(filteredActivities.length / rowsPerPage)}`;
         document.getElementById('prevPage').disabled = currentPage === 1;
-        document.getElementById('nextPage').disabled = currentPage === Math.ceil(activities.length / rowsPerPage);
+        document.getElementById('nextPage').disabled = currentPage === Math.ceil(filteredActivities.length / rowsPerPage);
     }
 
     function changePage(direction) {
         currentPage += direction;
         displayActivities();
     }
+
+    // 필터 변경 이벤트 처리
+    document.querySelectorAll('input[name="suspicionType"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            currentPage = 1; // 필터를 변경하면 첫 페이지로 이동
+            displayActivities();
+        });
+    });
 
     displayActivities();
 </script>
