@@ -221,6 +221,7 @@
                 freqFileCount: document.getElementById('freqFileCount').value,
                 freqTime: document.getElementById('freqTime').value,
             };
+            localStorage.setItem('abnormalSettings', JSON.stringify(settings));
             console.log('저장된 설정:', settings);
             alert('설정이 저장되었습니다.');
         });

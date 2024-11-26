@@ -295,14 +295,14 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>사원 이름 & 파일명</th>
-                        <th>시작 날짜</th>
-                        <th>종료 날짜</th>
+                        <th>사원 이름</th>
+                        <th>파일명</th>
+                        <th>파일 이동 시간</th>
+                        <th>이동 횟수</th>
                         <th>의심 행동 유형</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <!-- 동적으로 결과를 채워넣을 부분 -->
+                    <tbody id="table-body">
                     </tbody>
                 </table>
             </div>
@@ -315,71 +315,99 @@
         <button id="nextPage" onclick="changePage(1)">&gt;</button>
     </div>
 <script>
+    let currentPage = 1;
+    const rowsPerPage = 5;
+
+    const data = [
+        { name: '홍길동', fileName: 'file1.txt', time: '23:30', fileCount: 10, timeRange: 30 },
+        { name: '김철수', fileName: 'report.docx', time: '22:00', fileCount: 3, timeRange: 10 },
+        { name: '박영희', fileName: 'data.xlsx', time: '10:00', fileCount: 50, timeRange: 60 },
+    ];
+
+    function loadSettings() {
+        return {
+            workStart: "09:00",
+            workEnd: "18:00",
+            bulkFileCount: 20,
+            bulkTime: 60,
+            freqFileCount: 5,
+            freqTime: 15,
+        };
+    }
+
+    function filterData() {
+        const settings = loadSettings();
+        const checkedTypes = Array.from(document.querySelectorAll('input[name="suspicionType"]:checked')).map(input => input.value);
+
+        return data.filter(item => {
+            const isOffWork = item.time < settings.workStart || item.time > settings.workEnd;
+            const isBulk = item.fileCount >= settings.bulkFileCount;
+            const isFrequent = item.fileCount >= settings.freqFileCount && item.timeRange <= settings.freqTime;
+
+            return checkedTypes.length === 0 ||
+                (checkedTypes.includes('offWork') && isOffWork) ||
+                (checkedTypes.includes('bulk') && isBulk) ||
+                (checkedTypes.includes('frequent') && isFrequent);
+        });
+    }
+
+    function displayActivities() {
+        const filteredData = filterData();
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+
+        const tableBody = document.querySelector('#table-body');
+        tableBody.innerHTML = '';
+
+        pageData.forEach(item => {
+        // 의심 행동 유형을 결정합니다.
+        let suspicionType = '';
+        if (item.time < loadSettings().workStart || item.time > loadSettings().workEnd) {
+            suspicionType = '근무 시간 외 파일 이동';
+        } else if (item.fileCount >= loadSettings().bulkFileCount) {
+            suspicionType = '대량 파일 이동';
+        } else if (item.fileCount >= loadSettings().freqFileCount && item.timeRange <= loadSettings().freqTime) {
+            suspicionType = '빈번한 파일 이동';
+        }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.fileName}</td>
+            <td>${item.time}</td>
+            <td>${item.fileCount}</td>
+            <td>${suspicionType}</td>  <!-- 의심 행동 유형을 동적으로 설정 -->
+        `;
+        tableBody.appendChild(row);
+        });
+
+        // 페이지네이션 업데이트
+        const filteredCount = filteredData.length;
+        const totalPages = Math.ceil(filteredCount / rowsPerPage);
+        document.querySelector('#pageInfo').textContent = `${currentPage} / ${totalPages}`;
+        document.querySelector('#prevPage').disabled = currentPage === 1;
+        document.querySelector('#nextPage').disabled = currentPage === totalPages;
+    }
+
+    // 체크박스를 클릭할 때마다 displayActivities 호출
+    document.querySelectorAll('input[name="suspicionType"]').forEach(input => {
+        input.addEventListener('change', () => {
+            currentPage = 1; // 체크박스를 바꿀 때 페이지는 1로 초기화
+            displayActivities();
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', displayActivities);
+
+    function changePage(direction) {
+        currentPage += direction;
+        displayActivities();
+    }
+
     function logout() {
-            // 로그아웃 시 로그인 페이지로 이동
-            window.location.href = 'login.html';
-        }
-
-    // 검색 처리 함수
-   function handleSearch(event) {
-       event.preventDefault(); // 기본 제출 동작 방지
-
-       // 선택된 체크박스들 확인
-       const selectedBehaviors = [];
-       const checkboxes = document.querySelectorAll('.behavior-checkboxes input[type="checkbox"]');
-
-       checkboxes.forEach(checkbox => {
-           if (checkbox.checked) {
-               selectedBehaviors.push(checkbox.value);
-           }
-       });
-
-       // 두 가지 이상 선택된 경우에만 조회하도록 설정
-        if (selectedBehaviors.length >= 2) {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            // 선택된 이상행동을 기반으로 필터링하여 서버로 요청
-            const searchRequest = {
-                behaviorTypes: selectedBehaviors,
-                startDate: startDate ? startDate : null,
-                endDate: endDate ? endDate : null
-            };
-
-            fetch('/api/abnormal-behaviors/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(searchRequest)
-            })
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.querySelector('.result-table tbody');
-                tableBody.innerHTML = ''; // 기존 데이터 지우기
-
-                // 서버에서 받아온 데이터를 테이블에 채우기
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.employeeName} & ${item.fileName}</td>
-                        <td>${item.startDate}</td>
-                        <td>${item.endDate}</td>
-                        <td>${item.behaviorType}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            })
-            .catch(error => console.error('Error:', error));
-
-        } else {
-            alert("두 가지 이상의 이상행동을 선택해주세요.");
-        }
-   }
-
-
-
+        window.location.href = 'login.html';
+    }
 </script>
-
 </body>
 </html>
