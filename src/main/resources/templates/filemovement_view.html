@@ -269,12 +269,12 @@
         <input type="date" id="endDate">
     </div>
 
-<!--    &lt;!&ndash; 의심 유형 선택 &ndash;&gt;-->
-<!--    <div class="filter-item">-->
-<!--        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>-->
-<!--        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>-->
-<!--        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>-->
-<!--    </div>-->
+    <!-- 의심 유형 선택 -->
+    <div class="filter-item">
+        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
+    </div>
 
     <!-- 정렬 옵션 -->
     <div class="sort-bar">
@@ -322,72 +322,55 @@
     }
 
     const activities = [
-        // 홍길동
-        { name: '홍길동', time: '2024-11-20 15:30:00', fileName: 'file1.txt', source: 'C:/Old/file1.txt', destination: 'D:/New/file1.txt', summary: '' },
-        { name: '홍길동', time: '2024-11-21 13:00:00', fileName: 'file2.txt', source: 'C:/Old/file2.txt', destination: 'D:/New/file2.txt', summary: '' },
-        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
-        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
-        { name: '홍길동', time: '2024-11-22 10:00:02', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
-        { name: '홍길동', time: '2024-11-22 10:00:03', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
-        { name: '홍길동', time: '2024-11-22 10:00:05', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
-        { name: '홍길동', time: '2024-11-22 10:00:07', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+        // 변상현
+        { name: '변상현', time: '2024-11-20 15:30:00', fileName: 'file1.txt', source: 'C:/Old/file1.txt', destination: 'D:/New/file1.txt', summary: '' },
+        { name: '변상현', time: '2024-11-21 13:00:00', fileName: 'file2.txt', source: 'C:/Old/file2.txt', destination: 'D:/New/file2.txt', summary: '' },
+        { name: '변상현', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '변상현', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '변상현', time: '2024-11-22 10:00:02', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '변상현', time: '2024-11-22 10:00:03', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '변상현', time: '2024-11-22 10:00:05', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '변상현', time: '2024-11-22 10:00:07', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
 
-        // 김철수
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'image.png', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data_backup.zip', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data.xlsx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'photo.jpg', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'notes.txt', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
-        { name: '김철수', time: '2024-11-21 13:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
-        { name: '김철수', time: '2024-11-23 14:30:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
+        // 연유진
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'image.png', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'data_backup.zip', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'data.xlsx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'photo.jpg', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-20 12:00:00', fileName: 'notes.txt', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '연유진', time: '2024-11-21 13:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
+        { name: '연유진', time: '2024-11-23 14:30:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
+        { name: '연유진', time: '2024-11-23 17:00:00', fileName: 'contract.doc', source: 'C:/Old/contract.doc', destination: 'D:/New/contract.doc', summary: '' },
+        { name: '연유진', time: '2024-11-24 18:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
+        { name: '연유진', time: '2024-11-25 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
+        { name: '연유진', time: '2024-11-27 09:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '' },
+        { name: '연유진', time: '2024-11-28 17:45:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
+        { name: '연유진', time: '2024-11-29 22:00:00', fileName: 'data_report.csv', source: 'C:/Old/data_report.csv', destination: 'D:/New/data_report.csv', summary: '' },
 
-        // 박영희
-        { name: '박영희', time: '2024-11-20 10:00:00', fileName: 'data.xlsx', source: 'C:/Old/data.xlsx', destination: 'D:/New/data.xlsx', summary: '' },
-        { name: '박영희', time: '2024-11-21 16:15:00', fileName: 'photo.jpg', source: 'C:/Old/photo.jpg', destination: 'D:/New/photo.jpg', summary: '' },
-        { name: '박영희', time: '2024-11-22 11:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
 
-        // 이민수
-        { name: '이민수', time: '2024-11-21 01:45:00', fileName: 'document.pdf', source: 'C:/Old/document.pdf', destination: 'D:/New/document.pdf', summary: '근무 시간 외 이동' },
-        { name: '이민수', time: '2024-11-22 03:30:00', fileName: 'script.js', source: 'C:/Old/script.js', destination: 'D:/New/script.js', summary: '근무 시간 외 이동' },
-        { name: '이민수', time: '2024-11-23 02:00:00', fileName: 'presentation.pptx', source: 'C:/Old/presentation.pptx', destination: 'D:/New/presentation.pptx', summary: '근무 시간 외 이동' },
+        // 임채연
+        { name: '임채연', time: '2024-11-21 01:45:00', fileName: 'document.pdf', source: 'C:/Old/document.pdf', destination: 'D:/New/document.pdf', summary: '근무 시간 외 이동' },
+        { name: '임채연', time: '2024-11-22 03:30:00', fileName: 'script.js', source: 'C:/Old/script.js', destination: 'D:/New/script.js', summary: '근무 시간 외 이동' },
+        { name: '임채연', time: '2024-11-23 02:00:00', fileName: 'presentation.pptx', source: 'C:/Old/presentation.pptx', destination: 'D:/New/presentation.pptx', summary: '근무 시간 외 이동' },
+        { name: '임채연', time: '2024-11-20 09:30:00', fileName: 'user_guide.pdf', source: 'C:/Old/user_guide.pdf', destination: 'D:/New/user_guide.pdf', summary: '' },
+        { name: '임채연', time: '2024-11-20 10:00:00', fileName: 'invoice.xlsx', source: 'C:/Old/invoice.xlsx', destination: 'D:/New/invoice.xlsx', summary: '' },
+        { name: '임채연', time: '2024-11-21 11:30:00', fileName: 'presentation.ppt', source: 'C:/Old/presentation.ppt', destination: 'D:/New/presentation.ppt', summary: '' },
+        { name: '임채연', time: '2024-11-22 16:30:00', fileName: 'spreadsheet.csv', source: 'C:/Old/spreadsheet.csv', destination: 'D:/New/spreadsheet.csv', summary: '' },
 
-        // 김하늘
-        { name: '김하늘', time: '2024-11-23 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
-        { name: '김하늘', time: '2024-11-24 08:00:00', fileName: 'log.txt', source: 'C:/Old/log.txt', destination: 'D:/New/log.txt', summary: '' },
-        { name: '김하늘', time: '2024-11-25 19:00:00', fileName: 'archive.zip', source: 'C:/Old/archive.zip', destination: 'D:/New/archive.zip', summary: '' },
 
-        // 정미나
-        { name: '정미나', time: '2024-11-21 16:30:00', fileName: 'presentation.pptx', source: 'C:/Old/presentation.pptx', destination: 'D:/New/presentation.pptx', summary: '' },
-        { name: '정미나', time: '2024-11-23 10:30:00', fileName: 'spreadsheet.csv', source: 'C:/Old/spreadsheet.csv', destination: 'D:/New/spreadsheet.csv', summary: '' },
-        { name: '정미나', time: '2024-11-24 14:30:00', fileName: 'config.ini', source: 'C:/Old/config.ini', destination: 'D:/New/config.ini', summary: '' },
+        // 한다희
+        { name: '한다희', time: '2024-11-25 12:45:00', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-25 12:45:01', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-25 12:45:03', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-25 12:45:04', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-25 12:45:07', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-25 12:45:08', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '한다희', time: '2024-11-26 11:00:00', fileName: 'logs.log', source: 'C:/Old/logs.log', destination: 'D:/New/logs.log', summary: '' },
+        { name: '한다희', time: '2024-11-28 13:30:00', fileName: 'summary_report.pdf', source: 'C:/Old/summary_report.pdf', destination: 'D:/New/summary_report.pdf', summary: '' },
 
-        // 서지훈
-        { name: '서지훈', time: '2024-11-25 12:45:00', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-25 12:45:01', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-25 12:45:03', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-25 12:45:04', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-25 12:45:07', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-25 12:45:08', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
-        { name: '서지훈', time: '2024-11-26 11:00:00', fileName: 'logs.log', source: 'C:/Old/logs.log', destination: 'D:/New/logs.log', summary: '' },
-        { name: '서지훈', time: '2024-11-28 13:30:00', fileName: 'summary_report.pdf', source: 'C:/Old/summary_report.pdf', destination: 'D:/New/summary_report.pdf', summary: '' },
+        ];
 
-        // 최원석
-        { name: '최원석', time: '2024-11-23 17:00:00', fileName: 'contract.doc', source: 'C:/Old/contract.doc', destination: 'D:/New/contract.doc', summary: '' },
-        { name: '최원석', time: '2024-11-24 18:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
-        { name: '최원석', time: '2024-11-25 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
-        { name: '최원석', time: '2024-11-27 09:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '' },
-        { name: '최원석', time: '2024-11-28 17:45:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
-        { name: '최원석', time: '2024-11-29 22:00:00', fileName: 'data_report.csv', source: 'C:/Old/data_report.csv', destination: 'D:/New/data_report.csv', summary: '' },
-
-        // 오지민
-        { name: '오지민', time: '2024-11-24 08:00:00', fileName: 'text.txt', source: 'C:/Old/text.txt', destination: 'D:/New/text.txt', summary: '' },
-        { name: '오지민', time: '2024-11-25 22:30:00', fileName: 'backup.bak', source: 'C:/Old/backup.bak', destination: 'D:/New/backup.bak', summary: '' },
-        { name: '오지민', time: '2024-11-26 19:00:00', fileName: 'data_final.xlsx', source: 'C:/Old/data_final.xlsx', destination: 'D:/New/data_final.xlsx', summary: '' },
-        { name: '오지민', time: '2024-11-23 17:00:00', fileName: 'contract.doc', source: 'C:/Old/contract.doc', destination: 'D:/New/contract.doc', summary: '' },
-        { name: '오지민', time: '2024-11-24 18:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
-        { name: '오지민', time: '2024-11-25 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
-    ];
 
 
     const rowsPerPage = 10;
