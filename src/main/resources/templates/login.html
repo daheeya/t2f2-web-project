@@ -81,7 +81,7 @@
     <div class="login-logo">
         관리자용 모니터링
     </div>
-    <form action="/login" method="post">
+    <form id="loginForm" action="javascript:void(0);">
         <input type="text" class="input-field" id="username" name="username" placeholder="아이디" required>
         <input type="password" class="input-field" id="password" name="password" placeholder="비밀번호" required>
         <button type="submit" class="login-button">로그인</button>
@@ -90,6 +90,24 @@
         T2F2
     </div>
 </div>
+<script>
+    // 하드코딩된 아이디와 비밀번호
+    var validUsername = "admin";  // 아이디
+    var validPassword = "1234";   // 비밀번호
 
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 폼 제출 동작 방지
+
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // 아이디와 비밀번호 검증
+        if (username === validUsername && password === validPassword) {
+            window.location.href = 'filemovement_view.html'; // 로그인 성공 시 파일 이동 페이지로 이동
+        } else {
+            alert('아이디 또는 비밀번호가 틀렸습니다.');
+        }
+    });
+</script>
 </body>
 </html>
