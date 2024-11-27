@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T2F2 - 이상행동 조회</title>
+    <title>이상 행동 조회</title>
     <style>
         /* 기본 스타일 */
         body {
-            position: relative;
             font-family: 'Arial', sans-serif;
             background-color: #FFFFFF;
             color: #333;
@@ -131,10 +129,12 @@
             border-radius: 5px;
         }
 
+
+
         .filter-bar {
             justify-content: space-between;
             gap: 0px;
-            padding: 10px 40px;
+            padding: 10px 130px 0px 60px;
         }
 
 
@@ -166,7 +166,7 @@
 
         .highlight {
             font-weight: bold; /* 강조는 굵기만 */
-            color: #007BFF; /* 검은색으로 설정 */
+            color: #000000; /* 검은색으로 설정 */
         }
 
         .narrow-column {
@@ -194,17 +194,13 @@
             cursor: pointer;
         }
 
-        .pagination button:hover {
-            background-color: #0062CC; /* 호버 시 버튼 배경색 */
-        }
-
         .pagination button:disabled {
             background-color: #007BFF;
             cursor: default;
         }
 
         .pagination span{
-            padding: 5px 0px;
+        padding: 5px 0px;
         }
 
         /* 로그아웃 버튼 스타일 */
@@ -224,190 +220,268 @@
         .logout-btn:hover {
             background-color: #e04343;
         }
+
     </style>
 </head>
 <body>
-<!-- 네비게이션 바 -->
-    <div class="navbar">
-        <div class="logo">T2F2</div>
-        <ul>
-            <li>
-                <a href="#">조회</a>
-                <div class="dropdown-content">
-                    <a href="filemovement_view.html">전체 활동 조회</a>
-                    <a href="abnormal_behavior_view.html">이상 행동 조회</a>
-                </div>
-            </li>
-            <li>
-                <a href="#">관리</a>
-                <div class="dropdown-content">
-                    <a href="usb.html">USB 관리</a>
-                    <a href="employee.html">사원 관리</a>
-                </div>
-            </li>
-            <li>
-                <a href="#">설정</a>
-                <div class="dropdown-content">
-                    <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
-                </div>
-            </li>
-        </ul>
-        <button class="logout-btn" onclick="logout()">로그아웃</button>
+<div class="navbar">
+    <div class="logo">T2F2</div>
+    <ul>
+        <li>
+            <a href="#">조회</a>
+            <div class="dropdown-content">
+                <a href="filemovement_view.html">전체 활동 조회</a>
+                <a href="abnormal_behavior_view.html">이상 행동 조회</a>
+            </div>
+        </li>
+        <li>
+            <a href="#">관리</a>
+            <div class="dropdown-content">
+                <a href="usb.html">USB 관리</a>
+                <a href="employee.html">사원 관리</a>
+            </div>
+        </li>
+        <li>
+            <a href="#">설정</a>
+            <div class="dropdown-content">
+                <a href="abnormal_behavior_settings.html">이상 행동 설정</a>
+            </div>
+        </li>
+    </ul>
+    <button class="logout-btn" onclick="logout()">로그아웃</button>
+</div>
+
+<div class="main-title">이상 행동 조회</div>
+
+<!-- 검색 기능 -->
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
+    <button onclick="search()">검색</button>
+</div>
+
+<!-- 필터 및 정렬 기능 -->
+<div class="filter-bar">
+    <!-- 날짜 선택 -->
+    <div class="filter-item">
+        <label>시작 날짜:</label>
+        <input type="date" id="startDate">
+        <label>종료 날짜:</label>
+        <input type="date" id="endDate">
     </div>
 
-    <div class="main">
-        <div class="main-title">이상 행동 조회</div>
-        <!-- 검색 기능 -->
-        <div class="search-bar">
-            <select id="searchOption">
-                <option value="employeeName">사원명</option>
-                <option value="fileName">파일명</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
-            <button onclick="search()">검색</button>
-        </div>
-        <!-- 필터 및 정렬 기능 -->
-        <div class="filter-bar">
-            <!-- 날짜 선택 -->
-            <div class="filter-item">
-                <label>시작 날짜:</label>
-                <input type="date" id="startDate">
-                <label>종료 날짜:</label>
-                <input type="date" id="endDate">
-            </div>
-            <!-- 의심 유형 선택 -->
-            <div class="filter-item">
-                <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
-                <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
-                <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
-            </div>
-            <!-- 정렬 옵션 -->
-            <div class="sort-bar">
-                <select id="sortOption">
-                    <option value="recent">최근순</option>
-                    <option value="oldest">오래된순</option>
-                </select>
-            </div>
-        </div>
-        <!-- 결과 표시 테이블 -->
-        <div id="view">
-            <div id="pending" class="table-container active">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>사원 이름</th>
-                        <th>파일명</th>
-                        <th>파일 이동 시간</th>
-                        <th>이동 횟수</th>
-                        <th>의심 행동 유형</th>
-                    </tr>
-                    </thead>
-                    <tbody id="table-body">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <!-- 의심 유형 선택 -->
+    <div class="filter-item">
+        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
+        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
     </div>
-        <!-- 페이지네이션 -->
-    <div class="pagination">
-        <button id="prevPage" onclick="changePage(-1)" disabled>&lt;</button>
-        <span id="pageInfo">1 / 1</span>
-        <button id="nextPage" onclick="changePage(1)">&gt;</button>
+
+    <!-- 정렬 옵션 -->
+    <div class="sort-bar">
+        <select id="sortOption">
+            <option value="recent">최근순</option>
+            <option value="oldest">오래된순</option>
+        </select>
     </div>
+</div>
+
+<!-- 활동 목록 -->
+<table>
+    <thead>
+    <tr>
+        <th class="narrow-column highlight">사원명</th>
+        <th class="narrow-column highlight">이동 시간</th>
+        <th class="wide-column">파일 이름</th>
+        <th class="wide-column">이동 횟수</th>
+        <th class="narrow-column">의심 행동 요약</th>
+    </tr>
+    </thead>
+    <tbody id="activityTable">
+    <tr th:each="fileMovement : ${fileMovements}">
+        <td th:text="${fileMovement.employee}"></td>
+        <td th:text="${fileMovement.fileName}"></td>
+        <td th:text="${fileMovement.movementDate}"></td>
+        <td th:text="${fileMovement.suspicionType}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 페이지네이션 -->
+<div class="pagination">
+    <button id="prevPage" onclick="changePage(-1)" disabled>&lt;</button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextPage" onclick="changePage(1)">&gt;</button>
+</div>
+
 <script>
-    let currentPage = 1;
-    const rowsPerPage = 5;
-
-    const data = [
-        { name: '홍길동', fileName: 'file1.txt', time: '23:30', fileCount: 10, timeRange: 30 },
-        { name: '김철수', fileName: 'report.docx', time: '22:00', fileCount: 3, timeRange: 10 },
-        { name: '박영희', fileName: 'data.xlsx', time: '10:00', fileCount: 50, timeRange: 60 },
-    ];
-
-    function loadSettings() {
-        return {
-            workStart: "09:00",
-            workEnd: "18:00",
-            bulkFileCount: 20,
-            bulkTime: 60,
-            freqFileCount: 5,
-            freqTime: 15,
-        };
+    function logout() {
+        // 로그아웃 시 로그인 페이지로 이동
+        window.location.href = 'login.html';
     }
 
-    function filterData() {
-        const settings = loadSettings();
-        const checkedTypes = Array.from(document.querySelectorAll('input[name="suspicionType"]:checked')).map(input => input.value);
+    const activities = [
+        // 홍길동
+        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: '1', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: '2', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:02', fileName: 'file3.txt', source: '3', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:03', fileName: 'file3.txt', source: '4', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:05', fileName: 'file3.txt', source: '5', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:07', fileName: 'file3.txt', source: '6', summary: '빈번한 파일 이동' },
 
-        return data.filter(item => {
-            const isOffWork = item.time < settings.workStart || item.time > settings.workEnd;
-            const isBulk = item.fileCount >= settings.bulkFileCount;
-            const isFrequent = item.fileCount >= settings.freqFileCount && item.timeRange <= settings.freqTime;
+        // 김철수
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'report.docx', source: '1', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'image.png', source: '1', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data_backup.zip', source: '1', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data.xlsx', source: '1', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'photo.jpg', source: '1', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'notes.txt', source: '1', summary: '대량 파일 이동' },
 
-            return checkedTypes.length === 0 ||
-                (checkedTypes.includes('offWork') && isOffWork) ||
-                (checkedTypes.includes('bulk') && isBulk) ||
-                (checkedTypes.includes('frequent') && isFrequent);
-        });
+        // 이민수
+        { name: '이민수', time: '2024-11-21 01:45:00', fileName: 'document.pdf', source: '1', summary: '근무 시간 외 이동' },
+        { name: '이민수', time: '2024-11-22 03:30:00', fileName: 'script.js', source: '1', summary: '근무 시간 외 이동' },
+        { name: '이민수', time: '2024-11-23 02:00:00', fileName: 'presentation.pptx', source: '1', summary: '근무 시간 외 이동' },
+
+        // 서지훈
+        { name: '서지훈', time: '2024-11-25 12:45:00', fileName: 'database.mdb', source: '1', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:01', fileName: 'database.mdb', source: '2', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:03', fileName: 'database.mdb', source: '3', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:04', fileName: 'database.mdb', source: '4', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:07', fileName: 'database.mdb', source: '5', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:08', fileName: 'database.mdb', source: '6', summary: '빈번한 파일 이동' },
+
+    ];
+
+
+
+    const rowsPerPage = 10;
+    let currentPage = 1;
+
+    function getCheckedFilters() {
+        const checkboxes = document.querySelectorAll('input[name="suspicionType"]:checked');
+        return Array.from(checkboxes).map(checkbox => checkbox.value);
+    }
+
+    function filterActivities() {
+        const filters = getCheckedFilters();
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const startDateInput = document.getElementById('startDate').value;
+        const endDateInput = document.getElementById('endDate').value;
+
+        let filtered = activities;
+
+        if (filters.length > 0) {
+            filtered = filtered.filter(activity => {
+                return filters.some(filter => {
+                    if (filter === "offWork" && activity.summary.includes("근무 시간 외 이동")) {
+                        return true;
+                    }
+                    if (filter === "bulk" && activity.summary.includes("대량 파일 이동")) {
+                        return true;
+                    }
+                    if (filter === "frequent" && activity.summary.includes("빈번한 파일 이동")) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
+        }
+
+        if (searchInput) {
+            filtered = filtered.filter(activity => {
+                return activity.name.toLowerCase().includes(searchInput) ||
+                    activity.fileName.toLowerCase().includes(searchInput) ||
+                    activity.time.toLowerCase().includes(searchInput);
+            });
+        }
+
+        // 날짜 범위 필터링
+        if (startDateInput) {
+            filtered = filtered.filter(activity => {
+                return new Date(activity.time) >= new Date(startDateInput);
+            });
+        }
+
+        if (endDateInput) {
+            filtered = filtered.filter(activity => {
+                return new Date(activity.time) <= new Date(endDateInput);
+            });
+        }
+
+        return filtered;
+    }
+
+    function sortActivities(filteredActivities) {
+        const sortOption = document.getElementById('sortOption').value;
+        if (sortOption === 'recent') {
+            return filteredActivities.sort((a, b) => new Date(b.time) - new Date(a.time));
+        } else if (sortOption === 'oldest') {
+            return filteredActivities.sort((a, b) => new Date(a.time) - new Date(b.time));
+        }
+        return filteredActivities;
     }
 
     function displayActivities() {
-        const filteredData = filterData();
+        let filteredActivities = filterActivities();
+        filteredActivities = sortActivities(filteredActivities);
+
         const startIndex = (currentPage - 1) * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
-        const pageData = filteredData.slice(startIndex, endIndex);
-
-        const tableBody = document.querySelector('#table-body');
+        const tableBody = document.getElementById('activityTable');
         tableBody.innerHTML = '';
 
-        pageData.forEach(item => {
-        // 의심 행동 유형을 결정합니다.
-        let suspicionType = '';
-        if (item.time < loadSettings().workStart || item.time > loadSettings().workEnd) {
-            suspicionType = '근무 시간 외 파일 이동';
-        } else if (item.fileCount >= loadSettings().bulkFileCount) {
-            suspicionType = '대량 파일 이동';
-        } else if (item.fileCount >= loadSettings().freqFileCount && item.timeRange <= loadSettings().freqTime) {
-            suspicionType = '빈번한 파일 이동';
-        }
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.fileName}</td>
-            <td>${item.time}</td>
-            <td>${item.fileCount}</td>
-            <td>${suspicionType}</td>  <!-- 의심 행동 유형을 동적으로 설정 -->
-        `;
-        tableBody.appendChild(row);
+        filteredActivities.slice(startIndex, endIndex).forEach(activity => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="narrow-column highlight">${activity.name}</td>
+                <td class="narrow-column highlight">${activity.time}</td>
+                <td class="wide-column">${activity.fileName}</td>
+                <td class="wide-column">${activity.source}</td>
+                <td class="narrow-column">${activity.summary}</td>
+            `;
+            tableBody.appendChild(row);
         });
 
-        // 페이지네이션 업데이트
-        const filteredCount = filteredData.length;
-        const totalPages = Math.ceil(filteredCount / rowsPerPage);
-        document.querySelector('#pageInfo').textContent = `${currentPage} / ${totalPages}`;
-        document.querySelector('#prevPage').disabled = currentPage === 1;
-        document.querySelector('#nextPage').disabled = currentPage === totalPages;
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${Math.ceil(filteredActivities.length / rowsPerPage)}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === Math.ceil(filteredActivities.length / rowsPerPage);
     }
-
-    // 체크박스를 클릭할 때마다 displayActivities 호출
-    document.querySelectorAll('input[name="suspicionType"]').forEach(input => {
-        input.addEventListener('change', () => {
-            currentPage = 1; // 체크박스를 바꿀 때 페이지는 1로 초기화
-            displayActivities();
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', displayActivities);
 
     function changePage(direction) {
         currentPage += direction;
         displayActivities();
     }
 
-    function logout() {
-        window.location.href = 'login.html';
-    }
+    // 필터 변경 이벤트 처리
+    document.querySelectorAll('input[name="suspicionType"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            currentPage = 1; // 필터를 변경하면 첫 페이지로 이동
+            displayActivities();
+        });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('startDate').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('endDate').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('sortOption').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    // 초기 화면에 표시
+    displayActivities();
 </script>
+
 </body>
 </html>

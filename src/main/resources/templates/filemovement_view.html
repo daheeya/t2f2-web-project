@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>전체 활동 조회</title>
@@ -134,7 +134,7 @@
         .filter-bar {
             justify-content: space-between;
             gap: 0px;
-            padding: 10px 40px;
+            padding: 10px 130px 0px 60px;
         }
 
 
@@ -224,8 +224,6 @@
     </style>
 </head>
 <body>
-
-<!-- 네비게이션 바 -->
 <div class="navbar">
     <div class="logo">T2F2</div>
     <ul>
@@ -257,10 +255,6 @@
 
 <!-- 검색 기능 -->
 <div class="search-bar">
-    <select id="searchOption">
-        <option value="employeeName">사원명</option>
-        <option value="fileName">파일명</option>
-    </select>
     <input type="text" id="searchInput" placeholder="검색어를 입력하세요" style="width: 250px;">
     <button onclick="search()">검색</button>
 </div>
@@ -275,12 +269,12 @@
         <input type="date" id="endDate">
     </div>
 
-    <!-- 의심 유형 선택 -->
-    <div class="filter-item">
-        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>
-        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>
-        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>
-    </div>
+<!--    &lt;!&ndash; 의심 유형 선택 &ndash;&gt;-->
+<!--    <div class="filter-item">-->
+<!--        <label><input type="checkbox" name="suspicionType" value="offWork"> 근무 시간 외 파일 이동</label>-->
+<!--        <label><input type="checkbox" name="suspicionType" value="bulk"> 대량 파일 이동</label>-->
+<!--        <label><input type="checkbox" name="suspicionType" value="frequent"> 빈번한 파일 이동</label>-->
+<!--    </div>-->
 
     <!-- 정렬 옵션 -->
     <div class="sort-bar">
@@ -297,13 +291,20 @@
     <tr>
         <th class="narrow-column highlight">사원명</th>
         <th class="narrow-column highlight">이동 시간</th>
-        <th class="narrow-column highlight">파일 이름</th>
+        <th class="wide-column">파일 이름</th>
         <th class="wide-column">이동 전 파일 위치</th>
         <th class="wide-column">이동 후 파일 위치</th>
         <th class="narrow-column">의심 행동 요약</th>
     </tr>
     </thead>
     <tbody id="activityTable">
+    <tr th:each="fileMovement : ${fileMovements}">
+        <td th:text="${fileMovement.employee}"></td>
+        <td th:text="${fileMovement.fileName}"></td>
+        <td th:text="${fileMovement.movementDate}"></td>
+        <td th:text="${fileMovement.movementCount}"></td>
+        <td th:text="${fileMovement.suspicionType}"></td>
+    </tr>
     </tbody>
 </table>
 
@@ -321,11 +322,73 @@
     }
 
     const activities = [
-        { name: "김사원1", time: "2024-11-10 09:30", fileName: "Doc1", source: "C:/Old/Doc1", destination: "D:/New/Doc1", summary: "근무 시간 외 이동" },
-        { name: "이사원2", time: "2024-11-10 09:32", fileName: "Doc2", source: "C:/Old/Doc2", destination: "D:/New/Doc2", summary: "대량 파일 이동" },
-        { name: "박사원3", time: "2024-11-10 09:35", fileName: "Doc3", source: "C:/Old/Doc3", destination: "D:/New/Doc3", summary: "빈번한 파일 이동" },
-        // 추가 데이터
+        // 홍길동
+        { name: '홍길동', time: '2024-11-20 15:30:00', fileName: 'file1.txt', source: 'C:/Old/file1.txt', destination: 'D:/New/file1.txt', summary: '' },
+        { name: '홍길동', time: '2024-11-21 13:00:00', fileName: 'file2.txt', source: 'C:/Old/file2.txt', destination: 'D:/New/file2.txt', summary: '' },
+        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:00', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:02', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:03', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:05', fileName: 'file3.txt', source: 'D:/New/file3.txt', destination: 'D:/New/file3.txt', summary: '빈번한 파일 이동' },
+        { name: '홍길동', time: '2024-11-22 10:00:07', fileName: 'file3.txt', source: 'C:/Old/file3.txt', destination: 'C:/Old/file3.txt', summary: '빈번한 파일 이동' },
+
+        // 김철수
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'image.png', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data_backup.zip', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'data.xlsx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'photo.jpg', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-20 12:00:00', fileName: 'notes.txt', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '대량 파일 이동' },
+        { name: '김철수', time: '2024-11-21 13:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
+        { name: '김철수', time: '2024-11-23 14:30:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
+
+        // 박영희
+        { name: '박영희', time: '2024-11-20 10:00:00', fileName: 'data.xlsx', source: 'C:/Old/data.xlsx', destination: 'D:/New/data.xlsx', summary: '' },
+        { name: '박영희', time: '2024-11-21 16:15:00', fileName: 'photo.jpg', source: 'C:/Old/photo.jpg', destination: 'D:/New/photo.jpg', summary: '' },
+        { name: '박영희', time: '2024-11-22 11:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
+
+        // 이민수
+        { name: '이민수', time: '2024-11-21 01:45:00', fileName: 'document.pdf', source: 'C:/Old/document.pdf', destination: 'D:/New/document.pdf', summary: '근무 시간 외 이동' },
+        { name: '이민수', time: '2024-11-22 03:30:00', fileName: 'script.js', source: 'C:/Old/script.js', destination: 'D:/New/script.js', summary: '근무 시간 외 이동' },
+        { name: '이민수', time: '2024-11-23 02:00:00', fileName: 'presentation.pptx', source: 'C:/Old/presentation.pptx', destination: 'D:/New/presentation.pptx', summary: '근무 시간 외 이동' },
+
+        // 김하늘
+        { name: '김하늘', time: '2024-11-23 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
+        { name: '김하늘', time: '2024-11-24 08:00:00', fileName: 'log.txt', source: 'C:/Old/log.txt', destination: 'D:/New/log.txt', summary: '' },
+        { name: '김하늘', time: '2024-11-25 19:00:00', fileName: 'archive.zip', source: 'C:/Old/archive.zip', destination: 'D:/New/archive.zip', summary: '' },
+
+        // 정미나
+        { name: '정미나', time: '2024-11-21 16:30:00', fileName: 'presentation.pptx', source: 'C:/Old/presentation.pptx', destination: 'D:/New/presentation.pptx', summary: '' },
+        { name: '정미나', time: '2024-11-23 10:30:00', fileName: 'spreadsheet.csv', source: 'C:/Old/spreadsheet.csv', destination: 'D:/New/spreadsheet.csv', summary: '' },
+        { name: '정미나', time: '2024-11-24 14:30:00', fileName: 'config.ini', source: 'C:/Old/config.ini', destination: 'D:/New/config.ini', summary: '' },
+
+        // 서지훈
+        { name: '서지훈', time: '2024-11-25 12:45:00', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:01', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:03', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:04', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:07', fileName: 'database.mdb', source: 'C:/Old/database.mdb', destination: 'D:/New/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-25 12:45:08', fileName: 'database.mdb', source: 'D:/New/database.mdb', destination: 'C:/Old/database.mdb', summary: '빈번한 파일 이동' },
+        { name: '서지훈', time: '2024-11-26 11:00:00', fileName: 'logs.log', source: 'C:/Old/logs.log', destination: 'D:/New/logs.log', summary: '' },
+        { name: '서지훈', time: '2024-11-28 13:30:00', fileName: 'summary_report.pdf', source: 'C:/Old/summary_report.pdf', destination: 'D:/New/summary_report.pdf', summary: '' },
+
+        // 최원석
+        { name: '최원석', time: '2024-11-23 17:00:00', fileName: 'contract.doc', source: 'C:/Old/contract.doc', destination: 'D:/New/contract.doc', summary: '' },
+        { name: '최원석', time: '2024-11-24 18:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
+        { name: '최원석', time: '2024-11-25 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
+        { name: '최원석', time: '2024-11-27 09:00:00', fileName: 'report.docx', source: 'C:/Old/report.docx', destination: 'D:/New/report.docx', summary: '' },
+        { name: '최원석', time: '2024-11-28 17:45:00', fileName: 'data_backup.zip', source: 'C:/Old/data_backup.zip', destination: 'D:/New/data_backup.zip', summary: '' },
+        { name: '최원석', time: '2024-11-29 22:00:00', fileName: 'data_report.csv', source: 'C:/Old/data_report.csv', destination: 'D:/New/data_report.csv', summary: '' },
+
+        // 오지민
+        { name: '오지민', time: '2024-11-24 08:00:00', fileName: 'text.txt', source: 'C:/Old/text.txt', destination: 'D:/New/text.txt', summary: '' },
+        { name: '오지민', time: '2024-11-25 22:30:00', fileName: 'backup.bak', source: 'C:/Old/backup.bak', destination: 'D:/New/backup.bak', summary: '' },
+        { name: '오지민', time: '2024-11-26 19:00:00', fileName: 'data_final.xlsx', source: 'C:/Old/data_final.xlsx', destination: 'D:/New/data_final.xlsx', summary: '' },
+        { name: '오지민', time: '2024-11-23 17:00:00', fileName: 'contract.doc', source: 'C:/Old/contract.doc', destination: 'D:/New/contract.doc', summary: '' },
+        { name: '오지민', time: '2024-11-24 18:45:00', fileName: 'notes.txt', source: 'C:/Old/notes.txt', destination: 'D:/New/notes.txt', summary: '' },
+        { name: '오지민', time: '2024-11-25 20:00:00', fileName: 'image.png', source: 'C:/Old/image.png', destination: 'D:/New/image.png', summary: '' },
     ];
+
 
     const rowsPerPage = 10;
     let currentPage = 1;
@@ -337,31 +400,67 @@
 
     function filterActivities() {
         const filters = getCheckedFilters();
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const startDateInput = document.getElementById('startDate').value;
+        const endDateInput = document.getElementById('endDate').value;
 
-        if (filters.length === 0) {
-            // 필터가 없으면 모든 데이터를 반환
-            return activities;
+        let filtered = activities;
+
+        if (filters.length > 0) {
+            filtered = filtered.filter(activity => {
+                return filters.some(filter => {
+                    if (filter === "offWork" && activity.summary.includes("근무 시간 외 이동")) {
+                        return true;
+                    }
+                    if (filter === "bulk" && activity.summary.includes("대량 파일 이동")) {
+                        return true;
+                    }
+                    if (filter === "frequent" && activity.summary.includes("빈번한 파일 이동")) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
         }
 
-        return activities.filter(activity => {
-            // summary가 필터 중 하나와 일치하면 포함
-            return filters.some(filter => {
-                if (filter === "offWork" && activity.summary.includes("근무 시간 외 이동")) {
-                    return true;
-                }
-                if (filter === "bulk" && activity.summary.includes("대량 파일 이동")) {
-                    return true;
-                }
-                if (filter === "frequent" && activity.summary.includes("빈번한 파일 이동")) {
-                    return true;
-                }
-                return false;
+        if (searchInput) {
+            filtered = filtered.filter(activity => {
+                return activity.name.toLowerCase().includes(searchInput) ||
+                    activity.fileName.toLowerCase().includes(searchInput) ||
+                    activity.time.toLowerCase().includes(searchInput);
             });
-        });
+        }
+
+        // 날짜 범위 필터링
+        if (startDateInput) {
+            filtered = filtered.filter(activity => {
+                return new Date(activity.time) >= new Date(startDateInput);
+            });
+        }
+
+        if (endDateInput) {
+            filtered = filtered.filter(activity => {
+                return new Date(activity.time) <= new Date(endDateInput);
+            });
+        }
+
+        return filtered;
+    }
+
+    function sortActivities(filteredActivities) {
+        const sortOption = document.getElementById('sortOption').value;
+        if (sortOption === 'recent') {
+            return filteredActivities.sort((a, b) => new Date(b.time) - new Date(a.time));
+        } else if (sortOption === 'oldest') {
+            return filteredActivities.sort((a, b) => new Date(a.time) - new Date(b.time));
+        }
+        return filteredActivities;
     }
 
     function displayActivities() {
-        const filteredActivities = filterActivities();
+        let filteredActivities = filterActivities();
+        filteredActivities = sortActivities(filteredActivities);
+
         const startIndex = (currentPage - 1) * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         const tableBody = document.getElementById('activityTable');
@@ -372,7 +471,7 @@
             row.innerHTML = `
                 <td class="narrow-column highlight">${activity.name}</td>
                 <td class="narrow-column highlight">${activity.time}</td>
-                <td class="narrow-column highlight">${activity.fileName}</td>
+                <td class="wide-column">${activity.fileName}</td>
                 <td class="wide-column">${activity.source}</td>
                 <td class="wide-column">${activity.destination}</td>
                 <td class="narrow-column">${activity.summary}</td>
@@ -398,6 +497,27 @@
         });
     });
 
+    document.getElementById('searchInput').addEventListener('input', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('startDate').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('endDate').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    document.getElementById('sortOption').addEventListener('change', () => {
+        currentPage = 1;
+        displayActivities();
+    });
+
+    // 초기 화면에 표시
     displayActivities();
 </script>
 
